@@ -2,7 +2,9 @@
 
 ## Overview
 
-**Autarky** is a modern open-source framework for the **optimal sizing and dispatch of decentralized mini-grid systems**, tailored for rural electrification and energy resilience. Implemented in **Julia** with **JuMP**, it supports hybrid systems including **solar PV**, **batteries**, **diesel generators**, and **grid connection** under both **deterministic** and **stochastic** conditions.
+**Autarky** is a modern open-source framework for the **optimal sizing and dispatch of decentralized mini-grid systems**, under four different uncertainties. 
+
+This is tailored for rural electrification and energy resilience. Implemented in **Julia** with **JuMP**, it supports hybrid systems including **solar PV**, **batteries**, **diesel generators**, and **grid connection** under both **deterministic** and **stochastic** conditions.
 
 The framework enables robust and cost-effective energy system design by minimizing the **Net Present Cost (NPC)**, accounting for capital investment, replacement, operational costs, and salvage value — all under a multi-year horizon with optional **seasonality**.
 
