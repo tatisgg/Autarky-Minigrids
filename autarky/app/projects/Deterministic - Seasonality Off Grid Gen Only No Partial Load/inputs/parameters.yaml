@@ -1,0 +1,167 @@
+# PROJECT SETTINGS
+#-----------------------------------------------------------
+
+project_settings:
+  # Project coordinates (Faza, Kenya)
+  latitude: -2.05627616659381
+  longitude: 41.11023900111167
+  # Project Start Date (YYYY-MM-DD)
+  start_date: 2025-01-01
+  # Project lifetime [years]
+  project_lifetime: 20
+  # Time step duration (time resolution) [hours]
+  time_step_duration: 1
+  # Discount rate
+  discount_rate: 0.1
+  # Currency
+  currency: USD
+
+# Time series data (edit the seasonal definition below)
+time_series_settings:
+    data_type: "day"   # "day", "week" or "year" --> no seasonal variation needed
+    seasonality: true   # if false, the seasonal definition is ignored
+    num_seasons: 4      # Edit the seasonal definition below accordingly
+    # Seasonal definition (months)
+    seasonal_definition:
+      1: [12, 1, 2]   # Winter
+      2: [3, 4, 5]    # Spring
+      3: [6, 7, 8]    # Summer
+      4: [9, 10, 11]  # Autumn 
+
+
+# OPTIMIZATION CONSTRAINTS
+#-----------------------------------------------------------
+
+optimization_settings:
+  # Maximum annual Lost load as share of total demand to avoid overloading the system
+  max_lost_load_share: 0.0 # annual share of total demand
+  # Maximum CAPEX
+  max_capex : 1000000
+  # Minimum Renewable Peneration to regulate generator usage
+  min_res_share: 0.0 # annual share of total demand
+
+  # Model connection to the national grid
+  on_grid:
+    allow_grid_connection: false
+    # Allow export of excess electricity to the grid
+    allow_grid_export: false
+    # Maximum capacity of the power connection to the grid in kW
+    max_capacity: 500
+
+# TECHNO-ECONOMIC PARAMETERS
+#--------------------------------------------------------------
+
+# Solar PV Parameters
+solar_pv:
+  enabled: true                 # Enable solar PV system  
+  allow_units: false            # Optimize units of nominal capacity (Unit Commitment)
+  download_data: false          # Download solar data from PVGIS API
+  economics:
+    capex: 758                  # Specific investment cost per kW
+    opex: 0.01                  # Fixed O&M cost as annual share of investment cost
+    subsidy: 0.0                # Subsidy as a share of investment cost
+    lifetime: 20                # Lifetime of solar PV system in years
+  technical:
+    nominal_capacity: 1           # Nominal capacity of solar PV system in kW
+    pv_module: "CS3U-350MS"       # PV module model
+    inverter_efficiency: 0.95     # Inverter efficiency
+    # PV module parameters used if download_data: true
+    pv_area: 1.9                  # PV module area in m2/kW
+    tilt: 30.0                    # Tilt angle of solar panels in degrees
+    azimuth: 180.0                # Azimuth angle of solar panels in degrees
+    albedo: 0.2                   # Albedo coefficient
+    temperature_coefficient: -0.4 # Temperature coefficient in %/°C
+    NMOT: 45.0                    # Nominal module operating temperature in °C
+    T_NMOT: 20.0                  # Reference temperature in °C
+    G_NMOT: 800.0                 # Reference irradiance in W/m2
+
+# Wind Turbine Parameters
+wind_turbine:
+  enabled: false                # Enable wind turbine system  
+  allow_units: false            # Optimize units of nominal capacity (Unit Commitment)
+  download_data: false          # Download wind data from PVGIS API
+  economics:
+    capex: 1440                 # Specific investment cost per kW
+    opex: 0.02                  # Fixed O&M cost as annual share of investment cost
+    subsidy: 0.0                # Subsidy as a share of investment cost
+    lifetime: 20                # Lifetime of wind turbine system in years
+  technical:
+    nominal_capacity: 0.16             # Nominal capacity of wind turbine system in kW
+    turbine_model: "CW100"             # Wind turbine model
+    inverter_efficiency: 0.95          # Inverter efficiency
+    # Wind turbine parameters used if download_data: true
+    turbine_type: "Vertical Axis"      # Wind turbine type (Horizontal Axis/Vertical Axis)
+    rotor_diameter: 1.4                # Rotor diameter in meters
+    hub_height: 30.0                   # Rotor height in meters
+    drivetrain_efficiency: 0.95        # Drivetrain efficiency
+    surface_roughness: 0.1             # Surface roughness of the terrain
+
+# Battery Parameters
+battery:
+  enabled: false              # Enable battery system  
+  allow_units: false          # Optimize units of nominal capacity (Unit Commitment)
+  nominal_capacity: 1         # Nominal capacity of battery system in kWh
+  economics:
+    capex: 400                  # Specific investment cost per kWh
+    opex: 0.02                  # Fixed O&M cost as annual share of investment cost
+    lifetime: 10                # Expected lifetime of battery system in years
+  operation:
+    charge_time: 5            # Battery charging time in hours
+    discharge_time: 5         # Battery discharging time in hours
+  efficiency:
+    charge: 0.95              # Battery charging efficiency
+    discharge: 0.95           # Battery discharging efficiency
+  SOC:
+    min: 0.2                  # Minimum state of charge as a percentage
+    max: 0.9                  # Maximum state of charge as a percentage
+    initial: 0.5              # Initial state of charge as a percentage
+
+# Backup Generator Parameters
+generator:
+  enabled: true               # Enable backup generator system  
+  allow_units: false          # Optimize units of nominal capacity (Unit Commitment)
+  nominal_capacity: 1         # Nominal capacity of backup generator in kW
+  nominal_efficiency: 0.3     # Generator nominal efficiency (full load)
+  allow_partial_load: false    # Enable partial load effect (sample generator efficiency curve)
+  n_samples: 10               # Number of samples for the generator efficiency curve (if allow_partial_load: true)
+  economics:
+    capex: 350                  # Specific investment cost per kW
+    opex: 0.02                  # Fixed O&M cost as annual share of investment cost
+    lifetime: 20                # Lifetime of backup generator in years
+  fuel:
+    type: "diesel"                # Fuel type (e.g., diesel, gasoline, etc.)
+    fuel_lhv: 10.0                # Fuel lower heating value in kWh/l
+    fuel_cost: 1.2                # Fuel cost per liter
+    fuel_consumption_limit: false # Bool to enable fuel consumption constraint
+    max_fuel_consumption: 10000   # Max annual fuel consumption in liters
+
+# SOLVER SETTINGS
+#--------------------------------------------------------------
+
+solver_settings:
+  # Ipopt - Open-source solver for large-scale nonlinear optimization
+  ipopt_options:
+    linear_solver: ma27
+    max_iter: 100000
+    tol: 1e-6
+
+  # Gurobi - Commercial solver for linear programming, mixed-integer programming, and quadratic programming
+  gurobi_options:
+    time_limit: 10000
+    mipgap: 0.01
+    threads: 1
+    OutputFlag: 1
+
+  # GLPK - Open-source solver for linear programming, mixed-integer programming
+  glpk_options:
+    presolve: true    # Use presolve to simplify the problem (true/false)
+    msg_lev: 3        # Message level (0-4)
+    tm_lim: 100000    # Time limit in milliseconds
+
+  # HiGHS - Open-source solver for linear programming and mixed-integer programming
+  highs_options:
+    time_limit: 10000.0      # Time limit in seconds for the solver
+    mip_rel_gap: 1e-4        # Relative MIP gap tolerance
+    solver: "ipm"            # HiGHS solver mode: "ipm" (Interior Point), "simplex", etc.
+    threads: 2               # Number of threads to use
+    log_to_console: true     # Show solver log output in console

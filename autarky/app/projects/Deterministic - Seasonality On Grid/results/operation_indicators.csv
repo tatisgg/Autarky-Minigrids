@@ -1,0 +1,10 @@
+Indicator,Unit,Value
+Total Annual Solar Production,MWh/year,63.99016326565582
+Solar Curtailment Share,%,13.992800739182242
+Battery Discharge,MWh/year,33.94145494007665
+Battery Charge,MWh/year,33.941454940076646
+Generator Production,MWh/year,0.0
+Fuel Consumption,liters/year,0.0
+Grid Import,MWh/year,22.657674432926672
+Avg Grid Availability,%,93.75
+Renewable Penetration,%,100.0

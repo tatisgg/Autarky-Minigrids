@@ -1,0 +1,15 @@
+Indicator,Unit,Value
+Total Annual Solar Production,MWh/year,54.064345331329875
+Solar Curtailment Share,%,33.0005580032516
+Battery Discharge,MWh/year,99.61597618005374
+Battery Charge,MWh/year,99.61597618005375
+Average Yearly Battery Reserve,MWh,20.97353528019377
+Generator Production,MWh/year,8.112722238825272
+Fuel Consumption,liters/year,811.272223882527
+Average Yearly Generator Reserve,MWh,12.019486274531053
+Avg Generator Efficiency,kWh/liter,10.000000000000004
+Avg Generator Load Factor,%,20.032439091602374
+Grid Import,MWh/year,30.4257892316712
+Avg Grid Availability,%,106.25
+Renewable Penetration,%,86.95222763654527
+Average Yearly Expected Shortfall,MWh,7.274689646986261
