@@ -1,7 +1,6 @@
 # Importing the required packages and functions
 using JuMP, Ipopt
 using Random, MvNormalCDF
-import HSL_jll
 include(joinpath(@__DIR__, "utils.jl"))
 using .Utils: import_time_series, initialize_start_values
 # Display and export results
@@ -661,6 +660,17 @@ optimizer = optimizer_with_attributes(Ipopt.Optimizer)
 # Setting solver options
 solver_settings = parameters["solver_settings"]["ipopt_options"]
 println("\nInitializing the solver (Ipopt)...")
+# HSL linear solvers (ma27, ma57, ...) need a licensed HSL_jll in the environment, otherwise MUMPS is used
+use_hsl = startswith(string(get(solver_settings, "linear_solver", "mumps")), "ma")
+if use_hsl && Base.find_package("HSL_jll") === nothing
+    @warn "HSL_jll is not installed, using the MUMPS linear solver"
+    solver_settings["linear_solver"] = "mumps"
+    use_hsl = false
+end
+if use_hsl
+    import HSL_jll
+end
+use_hsl && set_optimizer_attribute(optimizer, "hsllib", HSL_jll.libhsl_path)
 for (key, value) in solver_settings
     set_optimizer_attribute(optimizer, key, value)
 end
@@ -675,11 +685,10 @@ solution_summary(model, verbose = true)
 # Evaluate solution status
 status = termination_status(model)
 
-if status == MOI.INFEASIBLE
-    error("\nOptimization result: INFEASIBLE. The model has no feasible solution. Please check constraints and input parameters.")
-else
-    println("\nOptimization completed with status: ", status)
+if !(status in (MOI.OPTIMAL, MOI.LOCALLY_SOLVED, MOI.ALMOST_OPTIMAL, MOI.ALMOST_LOCALLY_SOLVED))
+    error("\nOptimization result: $status. The model has no solution to report. Please check constraints and input parameters.")
 end
+println("\nOptimization completed with status: ", status)
 
 # POST PROCESSING
 # -----------------
