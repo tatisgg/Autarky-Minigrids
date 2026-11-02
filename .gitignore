@@ -1,0 +1,4 @@
+# HSL is licensed per user and must never be committed
+HSL_jll/
+HSL_jll.jl*/
+libhsl*

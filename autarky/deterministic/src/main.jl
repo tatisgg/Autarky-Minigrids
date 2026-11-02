@@ -1,5 +1,5 @@
 # Importing the required packages and functions
-using JuMP, Gurobi
+using JuMP, HiGHS
 include(joinpath(@__DIR__, "utils.jl"))
 using .Utils: import_time_series 
 # Display and export results
@@ -324,12 +324,16 @@ println("Model initialized successfully")
 # SOLVING THE MODEL
 # -----------------
 
-# Initialize Ipopt solver
-optimizer = optimizer_with_attributes(Gurobi.Optimizer)
+# Initialize the solver: HiGHS by default, Gurobi when requested (needs Gurobi.jl and a licence)
+solver_name = get(parameters["solver_settings"], "solver_name", "HiGHS")
+if solver_name == "Gurobi"
+    import Gurobi
+end
+optimizer = optimizer_with_attributes(solver_name == "Gurobi" ? Gurobi.Optimizer : HiGHS.Optimizer)
 
 # Setting solver options
-solver_settings = parameters["solver_settings"]["gurobi_options"]
-println("\nInitializing the solver (Gurobi)...")
+solver_settings = parameters["solver_settings"][solver_name == "Gurobi" ? "gurobi_options" : "highs_options"]
+println("\nInitializing the solver ($solver_name)...")
 for (key, value) in solver_settings
     set_optimizer_attribute(optimizer, key, value)
 end
@@ -344,11 +348,10 @@ solution_summary(model, verbose = true)
 # Evaluate solution status
 status = termination_status(model)
 
-if status == MOI.INFEASIBLE
-    error("\nOptimization result: INFEASIBLE. The model has no feasible solution. Please check constraints and input parameters.")
-else
-    println("\nOptimization completed with status: ", status)
+if !(status in (MOI.OPTIMAL, MOI.LOCALLY_SOLVED, MOI.ALMOST_OPTIMAL, MOI.ALMOST_LOCALLY_SOLVED))
+    error("\nOptimization result: $status. The model has no solution to report. Please check constraints and input parameters.")
 end
+println("\nOptimization completed with status: ", status)
 
 # POST PROCESSING
 # -----------------

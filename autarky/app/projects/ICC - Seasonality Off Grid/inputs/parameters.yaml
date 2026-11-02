@@ -151,27 +151,20 @@ generator:
 solver_settings:
   # Ipopt - Open-source solver for large-scale nonlinear optimization
   ipopt_options:
-    linear_solver: ma27
+    linear_solver: mumps    # or an HSL solver (ma27, ma57, ...) with a licensed HSL_jll installed
     max_iter: 100000
     tol: 1e-6
 
   # Gurobi - Commercial solver for linear programming, mixed-integer programming, and quadratic programming
   gurobi_options:
-    time_limit: 10000
+    TimeLimit: 10000
     mipgap: 0.01
     threads: 1
     OutputFlag: 1
-
-  # GLPK - Open-source solver for linear programming, mixed-integer programming
-  glpk_options:
-    presolve: true    # Use presolve to simplify the problem (true/false)
-    msg_lev: 3        # Message level (0-4)
-    tm_lim: 100000    # Time limit in milliseconds
 
   # HiGHS - Open-source solver for linear programming and mixed-integer programming
   highs_options:
     time_limit: 10000.0      # Time limit in seconds for the solver
     mip_rel_gap: 1e-4        # Relative MIP gap tolerance
-    solver: "ipm"            # HiGHS solver mode: "ipm" (Interior Point), "simplex", etc.
     threads: 2               # Number of threads to use
     log_to_console: true     # Show solver log output in console

@@ -52,12 +52,23 @@ Each model folder contains:
 
 ```
 
+To install the environment once, from the repository root:
+
+```bash
+julia --project=. -e 'using Pkg; Pkg.instantiate()'
+```
+
 To run a model:
 
 ```bash
-cd <selected model>/src
-julia main.jl
+cd autarky/<selected model>/src
+julia --project=../../.. main.jl
 ```
+
+### Solvers
+All models run on open-source solvers: HiGHS for the deterministic model, and Ipopt with the MUMPS linear solver for EVM, ICC and JCC. Two optional solvers are supported if you have a licence:
+- **HSL** (ma27, ma57, ...): obtain `HSL_jll` from the [HSL licensing portal](https://licences.stfc.ac.uk/product/libhsl), add it with `julia --project=. -e 'using Pkg; Pkg.develop(path="<path to HSL_jll.jl>")'`, and set `linear_solver` in `ipopt_options`. The repository does not distribute HSL.
+- **Gurobi**: add `Gurobi` to the environment and set `solver_name: Gurobi` in the deterministic `parameters.yaml`.
 
 ## Inputs
 - inputs/parameters.yaml: General project and technology configuration
@@ -100,8 +111,8 @@ streamlit run app.py
 Now you can explore the project via the Streamlit UI.
 
 ## Requirements
-- Julia ≥ 1.9
-- Packages: JuMP, Ipopt, GLPK, Distributions, YAML, etc.
+- Julia ≥ 1.10
+- Packages: JuMP, HiGHS, Ipopt, Distributions, YAML, etc. (see `Project.toml`)
 - Python ≥ 3.10 for the Streamlit app
 - Streamlit dependencies: pandas, plotly, matplotlib, etc.
 
