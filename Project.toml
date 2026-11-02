@@ -1,3 +1,7 @@
+name = "AutarkyMinigrids"
+uuid = "82404433-c32a-463d-8983-cf266dfb03ae"
+version = "2.0.0"
+
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 Clustering = "aaaa29a8-35af-508c-8bc3-b662a17a0fe5"
@@ -39,4 +43,4 @@ Random = "1"
 Statistics = "1"
 Test = "1"
 YAML = "0.4"
-julia = "1.10"
+julia = "1.12"
