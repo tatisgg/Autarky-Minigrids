@@ -2,7 +2,7 @@
 
 julia_version = "1.12.4"
 manifest_format = "2.0"
-project_hash = "4c3f84fe37400dbda75e23f756ba5a09a5b20e68"
+project_hash = "874d31613511df3502e2ed60b32e55f6d98f2e41"
 
 [[deps.ASL_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl"]
@@ -59,6 +59,12 @@ version = "1.1.3"
 [[deps.Artifacts]]
 uuid = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
 version = "1.11.0"
+
+[[deps.AutarkyMinigrids]]
+deps = ["CSV", "Clustering", "DataFrames", "Dates", "Distributions", "HTTP", "HiGHS", "HypothesisTests", "Interpolations", "Ipopt", "JSON", "JuMP", "LinearAlgebra", "MvNormalCDF", "Printf", "Random", "Statistics", "Test", "YAML"]
+path = "."
+uuid = "82404433-c32a-463d-8983-cf266dfb03ae"
+version = "2.0.0"
 
 [[deps.AxisAlgorithms]]
 deps = ["LinearAlgebra", "Random", "SparseArrays", "WoodburyMatrices"]

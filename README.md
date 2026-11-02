@@ -1,5 +1,7 @@
 # Autarky Mini-Grid Optimization Models
 
+[![CI](https://github.com/tatisgg/Autarky-Minigrids/actions/workflows/CI.yml/badge.svg)](https://github.com/tatisgg/Autarky-Minigrids/actions/workflows/CI.yml)
+
 ## Overview
 
 **Autarky** is a modern open-source framework for the **optimal sizing and dispatch of decentralized grid-connected mini-grid systems**, under four different uncertainties: demand, weather variability, frequency of outages and duration of outages from the main grid. 
@@ -65,6 +67,12 @@ cd autarky/<selected model>/src
 julia --project=../../.. main.jl
 ```
 
+To run the test suite, which runs each model on its bundled inputs:
+
+```bash
+julia --project=. -e 'using Pkg; Pkg.test()'
+```
+
 ### Solvers
 All models run on open-source solvers: HiGHS for the deterministic model, and Ipopt with the MUMPS linear solver for EVM, ICC and JCC. Two optional solvers are supported if you have a licence:
 - **HSL** (ma27, ma57, ...): obtain `HSL_jll` from the [HSL licensing portal](https://licences.stfc.ac.uk/product/libhsl), add it with `julia --project=. -e 'using Pkg; Pkg.develop(path="<path to HSL_jll.jl>")'`, and set `linear_solver` in `ipopt_options`. The repository does not distribute HSL.
@@ -111,7 +119,7 @@ streamlit run app.py
 Now you can explore the project via the Streamlit UI.
 
 ## Requirements
-- Julia ≥ 1.10
+- Julia ≥ 1.12
 - Packages: JuMP, HiGHS, Ipopt, Distributions, YAML, etc. (see `Project.toml`)
 - Python ≥ 3.10 for the Streamlit app
 - Streamlit dependencies: pandas, plotly, matplotlib, etc.

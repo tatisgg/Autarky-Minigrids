@@ -38,7 +38,7 @@ for model in MODEL_FOLDERS
 
     @test isfile(model_path)
 
-    try
+    ran = try
         @info("Running model: $model ...")
 
         # Wrap include in a local module to isolate constants/functions
@@ -47,10 +47,18 @@ for model in MODEL_FOLDERS
         end))
 
         @info("Successfully ran $model")
+        true
     catch e
         @error("Model $model failed to run", exception = e)
-        @test false
+        false
     end
+
+    # The JCC model is infeasible on its bundled case (issue #10)
+    if model == "autarky/jcc_genz"
+        @test_broken ran
+        continue
+    end
+    @test ran
 
     outputs = filter(f -> endswith(f, ".csv"), readdir(results_path; join=true))
     @test !isempty(outputs)

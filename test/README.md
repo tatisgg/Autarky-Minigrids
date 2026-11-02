@@ -4,6 +4,14 @@ This folder contains test scripts to verify that each optimization model in the 
 - Runs without errors
 - Produces expected result files (e.g., CSV, JSON)
 
+Run it from the repository root:
+
+```bash
+julia --project=. -e 'using Pkg; Pkg.test()'
+```
+
+Each model writes its results into its own `results/` folder. The JCC model is marked as a known failure until [#10](https://github.com/tatisgg/Autarky-Minigrids/issues/10) is fixed. CI runs the suite on every pull request.
+
 ## Default Case Studies
 
 Each model (Deterministic, Expected, ICC, JCC) is tested using the pre-loaded inputs inside their respective `/inputs` folder.
@@ -29,7 +37,7 @@ Key demand characteristics are: Average daily peak power of ~30 kW and Average d
 
 #### **Load Profile Visualization**
 
-![Load Profile Overview](https://github.com/AleOnori98/Autarky-2.0/blob/main/tests/images/load_profile.png)
+![Load Profile Overview](images/load_profile.png)
 
 > *Figure: Hourly demand profile for a typical day in wet and dry seasons.*
 
@@ -51,7 +59,7 @@ The system is designed as a fully off-grid hybrid mini-grid with the following s
 - **Battery storage** (including round-trip efficiency, state of charge limits, and degradation)
 - **Diesel generator** (with partial load efficiency curve)
 
-![System Layout](https://github.com/AleOnori98/Autarky-2.0/blob/main/tests/images/system_layout.png)
+![System Layout](images/system_layout.png)
 
 > *Figure: System schematic showing solar PV, battery, and diesel backup configuration.*
 
@@ -62,7 +70,7 @@ To implement the optimal dispatch strategy from Autarky, the system should inclu
 
 The optimal system configuration for the Kenyan island community includes an 128 kW solar PV array, 366 kWh of battery storage with a little backup contribution of 0.7 kW provided by the diesel generator. The model achieves almost 100% renewable penetration with no lost load, meeting all demand reliably. The total Net Present Cost of the project is approximately 334.35 kUSD (considerin 10% of discount rate over 20 years), with a Total Investment Cost 236.64 kUSD resulting in a levelized cost of energy (LCOE) of 0.22 USD/kWh. Annual Solar Curtailment Share is 11.22 % of total solar production while Annual fuel consumption is 83.58 liters/year, with the generator operating at an average efficiency of 10.5 kWh/liter and a load factor of nearly 13.9%.
 
-![Results](https://github.com/AleOnori98/Autarky-2.0/blob/main/tests/images/results_1.png)
+![Results](images/results_1.png)
 
 > *Figure: Optimal dispatch plot and cost breakdown.*
 
@@ -101,7 +109,7 @@ The model incorporates **solar PV**, **battery storage**, and a **diesel generat
 
 The expected values formulation provides a more resilient energy strategy by accounting for likely outages and variability. In this expected values scenario, the model achieves 100% renewable penetration using a 75.7 kW solar PV array and 137.3 kWh of battery storage, without requiring any generator capacity. The system successfully relies on the grid for backup during forecasted outages, importing approximately 70.7 MWh annually. The Net Present Cost is 197.39 kUSD and Total Annual Grid Cost 7.07 kUSD/year, with a significantly lower LCOE of 0.12 USD/kWh, thanks to optimized grid use and a well-sized battery reserve (~20.16 MWh annually).
 
-![Results](https://github.com/AleOnori98/Autarky-2.0/blob/main/tests/images/results_2.png)
+![Results](images/results_2.png)
 
 > *Figure: Optimal dispatch plot and cost breakdown.*
 
@@ -123,7 +131,7 @@ The results of the ICC model are very close to those of the Expected Values form
 
 Grid imports are also marginally higher (+0.5 MWh/year), suggesting the ICC model takes a more conservative approach to ensure reliable service under uncertain conditions. The **LCOE remains identical** at 0.12 USD/kWh, indicating that this increased robustness does not come at a significant cost premium.
 
-![Results](https://github.com/AleOnori98/Autarky-2.0/blob/main/tests/images/results_3.png)
+![Results](images/results_3.png)
 
 > *Figure: Optimal dispatch plot and cost breakdown for ICC model.*
 
@@ -137,11 +145,7 @@ The Joint Chance Constraints (JCC) formulation models correlated and compound un
 
 #### Results Overview
 
-Unlike the ICC and Expected Values models—which achieved 100% renewable penetration with no generator use, the JCC formulation results in a more risk-averse configuration: only 66% renewable penetration, higher grid reliance, and the inclusion of a 5.8 kW diesel generator. Solar capacity is downsized to 32.9 kW with over 56% curtailment, while generator and grid imports are both elevated. These decisions lead to a much higher Net Present Cost of 964.9 kUSD and LCOE of 0.60 USD/kWh, driven by costly operational redundancy needed to satisfy the strict joint probability constraints. This highlights the cost-risk trade-off intrinsic to robust energy system design under uncertainty.
-
-![Results](https://github.com/AleOnori98/Autarky-2.0/blob/main/tests/images/results_4.png)
-
-> *Figure: Optimal dispatch plot and cost breakdown for ICC model.*
+Ipopt currently ends with `LOCALLY_INFEASIBLE` on this case, so the model has no results to report. The figures previously shown here came from that infeasible point. See [#10](https://github.com/tatisgg/Autarky-Minigrids/issues/10).
 
 ---
 
